@@ -1,8 +1,11 @@
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class App {
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPATest");
         EntityManager em = emf.createEntityManager();
         try {
@@ -33,7 +36,7 @@ public class App {
                 return;
             }
 
-            // #2
+//             #2
             System.out.println("------------------ #2 ------------------");
 
             Query query = em.createQuery("SELECT c FROM Client c WHERE c.age < 5", Client.class);
@@ -76,13 +79,20 @@ public class App {
             // #5
             System.out.println("------------------ #5 ------------------");
             for (Course course : courseList) {
-                int i =0;
+                int i = 0;
                 for (Client client : course.getClients()) {
                     i++;
                 }
                 System.out.println(course.getName() + ": " + i);
             }
 
+//             #6
+            System.out.println("------------------ #6 ------------------");
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Client> criteriaQuery = cb.createQuery(Client.class);
+            Root<Client> c = criteriaQuery.from(Client.class);
+            criteriaQuery.select(c).where(cb.greaterThan(c.get("age"), 5));
+            em.createQuery(criteriaQuery).getResultList().forEach(System.out::println);
         } finally {
             em.close();
             emf.close();
