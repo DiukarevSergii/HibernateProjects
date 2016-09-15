@@ -74,7 +74,15 @@ public class App {
             }
 
             // #5
-            System.out.println("------------------ #4 ------------------");
+            System.out.println("------------------ #5 ------------------");
+            for (Course course : courseList) {
+                int i =0;
+                for (Client client : course.getClients()) {
+                    i++;
+                }
+                System.out.println(course.getName() + ": " + i);
+            }
+
         } finally {
             em.close();
             emf.close();
