@@ -4,8 +4,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Table(name="Clients")
-@NamedQuery(name="Client.findAll", query = "SELECT c FROM Client c")
+@Table(name = "Clients")
+@NamedQueries({
+        @NamedQuery(name = "Client.findAll", query = "SELECT c FROM Client c"),
+        @NamedQuery(name = "Client.findByAge", query = "SELECT c FROM Client c WHERE c.age > 8")
+})
 public class Client {
     @Id
     @GeneratedValue
@@ -17,12 +20,14 @@ public class Client {
 
     @ManyToMany
     @JoinTable(
-            name="ClientCourse",
-            joinColumns={@JoinColumn(name="client_id", referencedColumnName="id")},
-            inverseJoinColumns={@JoinColumn(name="course_id", referencedColumnName="id2")})
+            name = "ClientCourse",
+            joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id2")})
+
     List<Course> courses = new ArrayList<>();
 
-    public Client() {}
+    public Client() {
+    }
 
     public Client(String name, int age) {
         this.name = name;
@@ -30,9 +35,9 @@ public class Client {
     }
 
     public void addCourse(Course course) {
-        if ( ! courses.contains(course))
+        if (!courses.contains(course))
             courses.add(course);
-        if ( ! course.clients.contains(this))
+        if (!course.clients.contains(this))
             course.clients.add(this);
     }
 

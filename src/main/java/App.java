@@ -62,7 +62,7 @@ public class App {
             System.out.println("------------------ #4 ------------------");
             try {
                 query = em.createNamedQuery("Course.findByName", Course.class);
-                query.setParameter("name", "Course-1");
+                query.setParameter("name", "Course-2");
                 Course course = (Course) query.getSingleResult();
 
                 for (Client c : course.getClients()) {
@@ -92,7 +92,18 @@ public class App {
             CriteriaQuery<Client> criteriaQuery = cb.createQuery(Client.class);
             Root<Client> c = criteriaQuery.from(Client.class);
             criteriaQuery.select(c).where(cb.greaterThan(c.get("age"), 5));
-            em.createQuery(criteriaQuery).getResultList().forEach(System.out::println);
+            em.createQuery(criteriaQuery)
+                    .getResultList()
+                    .forEach(System.out::println);
+
+            // #7
+            System.out.println("------------------ #7 ------------------");
+            query = em.createNamedQuery("Client.findByAge", Client.class);
+            clientList = query.getResultList();
+            for (Client client : clientList) {
+                System.out.println(client);
+            }
+
         } finally {
             em.close();
             emf.close();
